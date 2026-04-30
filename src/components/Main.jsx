@@ -1,18 +1,20 @@
 import { useState } from "react";
 import ClaudeRecipe from "./ClaudeRecipe";
 import IngredientsList from "./IngredientsList";
+import { getRecipeFromLlama } from "../ai";
 
 export default function Main() {
   const [ingredients, setIngredients] = useState([]);
-  const [recipeShown, setRecipeShown] = useState(false);
+  const [recipe, setRecipe] = useState(false);
 
   function addIngredient(formData) {
     const newIngredient = formData.get("ingredient");
     setIngredients((prevIngredients) => [...prevIngredients, newIngredient]);
   }
 
-  function showRecipe() {
-    setRecipeShown((prevState) => !prevState);
+  async function getRecipe() {
+    const recipeMarkdown = await getRecipeFromLlama(ingredients);
+    setRecipe(recipeMarkdown);
   }
 
   return (
@@ -27,9 +29,9 @@ export default function Main() {
         <button>Add Ingredient</button>
       </form>
       {ingredients.length > 0 && (
-        <IngredientsList ingredients={ingredients} showRecipe={showRecipe} />
+        <IngredientsList ingredients={ingredients} getRecipe={getRecipe} />
       )}
-      {recipeShown && <ClaudeRecipe />}
+      {recipe && <ClaudeRecipe recipe={recipe} />}
     </main>
   );
 }
