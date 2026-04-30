@@ -16,7 +16,7 @@ export default function Main() {
     // const recipeMarkdown = await getRecipeFromLlama(ingredients);
     // setRecipe(recipeMarkdown);
     try {
-      const response = await fetch("../../api/recipe", {
+      const response = await fetch("/api/recipe", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
