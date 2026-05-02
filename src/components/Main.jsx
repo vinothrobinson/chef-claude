@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import ClaudeRecipe from "./ClaudeRecipe";
 import IngredientsList from "./IngredientsList";
 // import { getRecipeFromLlama } from "../../api/ai";
@@ -6,6 +6,13 @@ import IngredientsList from "./IngredientsList";
 export default function Main() {
   const [ingredients, setIngredients] = useState([]);
   const [recipe, setRecipe] = useState(false);
+  const recipeSection = useRef(null);
+
+  useEffect(() => {
+    if (recipe !== "" && recipeSection.current !== null) {
+      recipeSection.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [recipe]);
 
   function addIngredient(formData) {
     const newIngredient = formData.get("ingredient");
@@ -46,7 +53,11 @@ export default function Main() {
         <button>Add Ingredient</button>
       </form>
       {ingredients.length > 0 && (
-        <IngredientsList ingredients={ingredients} getRecipe={getRecipe} />
+        <IngredientsList
+          ingredients={ingredients}
+          getRecipe={getRecipe}
+          ref={recipeSection}
+        />
       )}
       {recipe && <ClaudeRecipe recipe={recipe} />}
     </main>
